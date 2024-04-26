@@ -1,0 +1,17 @@
+<div class="row filterDiscussions all read single">
+  <% unless current_user&.username == direct_message.channel_name%>
+    <div class="col-2">
+      <i class="material-icons">person</i>
+    </div>
+    <div class="col-10">
+      <% if current_user.present? %>
+        <% channel_name = (direct_message.channel_name.strip.split(",")).select {|a| a!=current_user.username}.join %>
+      <% else %>
+      <% channel_name = (direct_message.channel_name.strip.split(",")).select {|a| a == user.username}.join %>
+      <% end %>
+      <%= link_to channel_name, direct_message %>
+    </div>
+  <% end %>
+</div>
+
+

@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+# Messages controller
+class MessagesController < ApplicationController
+  def create
+    @current_user = current_user
+    @message = @current_user.messages.new(content: msg_params[:content], channel_id: params[:channel_id])
+    if @message.save
+      @notifications = @message.channel
+      flash[:alert] = "New Message"
+    end
+  end
+
+  private
+
+  def msg_params
+    params.require(:message).permit(:content)
+  end
+end

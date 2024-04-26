@@ -1,0 +1,132 @@
+<main>
+	<div class="layout row">
+		<!-- Start of Navigation -->
+		<div class="navigation bg-primary col-2">
+			<div class="container">
+				<div class="inside">
+					<div class="nav nav-tab menu">
+						<a href="#settings" data-toggle="tab"><i class="material-icons">settings</i></a>
+						<%= button_to login_path(@current_user), method: :delete, class: "btn power", remote: true do %>
+						  <i class="material-icons">power_settings_new</i>
+						<% end %>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End of Navigation -->
+		<!-- Start of Sidebar -->
+		<div class="sidebar col-3" id="sidebar">
+			<div class="container">
+				<div class="col-md-12">
+					<div class="tab-content">
+
+						<!-- Start of Discussions -->
+						<div id="discussions" class="tab-pane fade active show">
+
+              <!-- Start of user info -->
+              <div class="discussions">
+                <div class="row" style="margin-bottom: 2%;">
+                  <div class="col-2">
+                    <%= image_tag 'img/avatars/avatar-female-3.jpg', class: 'avatar-md', alt: 'avatar' %>
+                    <div class="status">
+                      <a href="" data-toggle="modal" data-target="#add_private_channel">
+                        <i class="material-icons online" style="position: relative; border-radius: 50%; border: 5px solid white; top: -33px; left: -21px; font-size: 18px !important;">fiber_manual_record</i>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-7" style="top: 14px;">
+                    <h5><%= @current_user.username%></h5>
+                  </div>
+                  <div class="col-3" style="top: 6px;">
+                    <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">menu</i></button>
+                  </div>
+                </div>                  
+              </div>
+              <!-- End of user info -->
+
+              <!-- Start of Favourite channels -->
+              <div class="discussions" style="margin-bottom: 7%;">
+                <div class="row">
+                  <div class="col-9">
+                    <h5>FAVORITE CHANNELS</h5>
+                    <div class="row">
+                      <div class="col-2">
+                        <i class="material-icons">person</i>
+                      </div>
+                      <div class="col-10">
+                        <h6><%= button_to "#{@current_user.username}(you)", channels_path, method: :post, params: {is_private: true }, style: "background: none;border: none;color: grey;font-weight: bolder;" %></h6>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+              <!-- End of Favourite channels -->
+
+              <!-- Start of private channels -->
+              <div class="discussions">
+                <div class="row">
+                  <div class="col-9">
+                    <h5>PRIVATE CHANNELS</h5>
+                  </div>
+                  <div class="col-3">
+                    <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">add</i></button>
+                  </div>
+                </div> 
+                	<%= turbo_stream_from "channels_#{@current_user.id}" %>
+                  <div class="list-group chats" role="tablist" id="channels">
+                    <%= render @channels %>
+                  </div>  
+              </div>
+
+              <!-- End of private channels -->
+
+              <!-- Start of direct messages -->
+              <div class="discussions">
+                <div class="row">
+                  <div class="col-9">
+                    <h5>DIRECT MESSAGES</h5>
+                  </div>
+                  <div class="col-3">
+                    <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#direct_message"><i class="material-icons">add</i></button>
+                  </div>
+                </div>
+                <%= turbo_stream_from "direct_messages#{@current_user.id}" %>
+                <div class="list-group chats" role="tablist" id="direct_messages_list">
+                  <%= render partial: 'partials/direct_message', collection: @direct_messages %>
+                </div>  
+              </div>
+              <!-- End of direct messages -->
+						</div>
+						<!-- End of Discussions -->
+						<!-- Start of Settings -->
+							<%= render 'partials/settings'%>
+						<!-- End of Settings -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Start Show messages -->
+			<%= render 'partials/show_messages' %>
+		<!-- End Show messages -->
+
+		<!-- End of Sidebar -->
+
+		<!-- Start of Create Chat -->
+			<%= render 'modals/create_channel' %>
+			<%= render 'modals/add_members' %>
+		<!-- End of Create Chat -->
+	</div> <!-- Layout -->
+  <%= turbo_stream_from "notification_#{@current_user.id}" do %>
+  <%if @notifications.present?%>
+      <%= render 'partials/notification'%>
+    <%end%>
+  <%end%>
+</main>
+<!-- core JavaScript -->
+<script>
+	function scrollToBottom(el) { el.scrollTop = el.scrollHeight; }
+	scrollToBottom(document.getElementById('content'));
+</script>
+

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mattermost Clone</title>
+    <meta charset="utf-8">
+    <meta name="description" content="#">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+
+      .main .chat .content .message<%=".cont-#{current_user&.id}" %> {
+        justify-content: flex-end;
+      }
+      .main .chat .content .message<%=".cont-#{current_user&.id}" %>:last-child {
+        margin-bottom: 43px;
+      }
+      .main .chat .content .message<%=".cont-#{current_user&.id}" %> span {
+        text-align: right;
+      }
+      .main .chat .content .message .text-group<%=".cont-#{current_user&.id}" %> {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> {
+        background: #2196F3;
+        -moz-transition: all .3s;
+        -webkit-transition: all .3s;
+        transition: all .3s;
+      }
+      .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> .attachment .attach {
+        background: #fff;
+        color: #2195F3;
+      }
+      .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> .attachment .file a:hover, .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> .attachment .file h5, .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> p {
+        color: #fff;
+      }
+      .main .chat .content .message .text<%=".cont-#{current_user&.id}" %> .attachment .file span {
+        color: #fff;
+        text-align: left;
+      }
+
+    </style>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag 'css/lib/bootstrap.min', 'css/swipe.min', 'application', media: 'all' %>
+    <%= javascript_importmap_tags %>
+    <%= javascript_include_tag 'js/vendor/jquery-slim.min', 'js/vendor/popper.min', 'js/swipe.min', 'js/bootstrap.min', 'js/jquery-3.3.1.slim.min', 'js/custom', 'application', media: 'all' %>
+
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

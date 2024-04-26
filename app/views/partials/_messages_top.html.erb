@@ -1,0 +1,45 @@
+<div class="top">
+	<div class="container">
+		<div class="col-md-12">
+			<div class="inside">
+				<div class="data">
+					<h5>
+						<a href="#">
+							<% if @single_room.is_private %>
+                <% unless @single_room.channel_name == current_user.username%>
+  								<%= (@single_room.channel_name.strip.split(",")).select {|a| a!=current_user.username}.join %>
+                <% else %>
+                  <%= @single_room.channel_name%>
+                <% end %>
+							<% else %>
+								<%= @single_room.channel_name%>
+							<% end %>
+						</a>
+					</h5>
+					<div class="row">
+					  <div class = "col-2">
+							<i class="material-icons online">fiber_manual_record</i>
+					  </div>
+					  <div class = "col-9">
+							<span>Active now</span>
+					  </div>
+					</div>
+				</div>
+        <% unless @single_room.is_private %>
+  				<button class="btn connect d-md-block d-none" name="1" data-toggle="modal" data-target="#addMembers"><i class="material-icons md-30">group_add</i></button>
+        <% end %>
+				<div class="dropdown">
+					<button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons md-30">more_vert</i></button>
+					<div class="dropdown-menu dropdown-menu-right">
+						<button class="dropdown-item connect" name="1"><i class="material-icons">phone_in_talk</i>Voice Call</button>
+						<button class="dropdown-item connect" name="1"><i class="material-icons">videocam</i>Video Call</button>
+						<hr>
+						<button class="dropdown-item"><i class="material-icons">clear</i>Clear History</button>
+						<button class="dropdown-item"><i class="material-icons">block</i>Block Contact</button>
+						<button class="dropdown-item"><i class="material-icons">delete</i>Delete Contact</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

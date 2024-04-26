@@ -1,0 +1,12 @@
+<div class="message cont-<%= message.user.id %>">
+	<%= image_tag 'img/avatars/avatar-female-5.jpg', class: 'avatar-md', alt: 'avatar', data: { toggle: 'tooltip', placement: 'top' }, title: 'Keith' %>
+  <div class="text-main">
+      <div class="text-group cont-<%= message.user.id %>">
+        <div class="text cont-<%= message.user.id %>">
+          <p><%= message.content %></p>
+        </div>
+      </div>
+      <span>
+      <span><%= message.user.username %> &nbsp &nbsp <%= message.created_at.strftime(" %b %d %Y %I:%M%p")%></span>
+    </div>
+</div>

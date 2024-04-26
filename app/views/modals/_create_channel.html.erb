@@ -1,0 +1,52 @@
+<div class="modal fade" id="add_private_channel" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="requests">
+			<div class="title">
+				<h1>New Channel</h1>
+				<button type="button" class="btn closeModal" data-dismiss="modal" aria-label="Close"><i class="material-icons">close</i></button>
+			</div>
+			<div class="content">
+				<%= form_with(remote: true, url: channels_path, class: "userForm" ) do |f| %>
+					<div class="form-group">
+						<label for="topic">Name:</label>
+						<%= f.text_field :channel_name, class: "form-control", autocomplete: 'off', id: "topic", placeholder: "Enter the channel name..", required: true %>
+					</div>
+					<%= f.submit 'Create New Channel', data: { disable_with: false }, class: "btn button w-100" %>
+				<%end%>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="direct_message" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="requests">
+			<div class="title">
+				<h1>Direct Message</h1>
+				<button type="button" class="btn closeModal" data-dismiss="modal" aria-label="Close"><i class="material-icons">close</i></button>
+			</div>
+			<div class="content">
+				<%= form_with(remote: true, url: channels_path, class: 'userForm' ) do |f| %>
+				  <div class="form-group">
+				  	<%= f.hidden_field :is_private, value: "true"%>
+				    <%= text_field_tag :search, nil, placeholder: "Search users", class: "form-control searchMembers" %>
+				  </div>
+				  <div class="form-group" style="background: #f5f5f5; padding: 10px; max-height: 200px; overflow-y: auto;">
+				    <% @users&.each do |user| %>
+					      <div class="checkbox user-checkbox">
+					        <%= radio_button_tag "selected_user[]", user.username, false, id: "user_#{user.id}" %>
+					        <%= label_tag "user_#{user.id}", user.username %>
+					      </div>
+				    <% end %>
+				  </div>
+				  <div class="form-group">
+				    <%= f.hidden_field :selected_users, class: "form-control  selectedMembers", readonly: true, placeholder: 'Selected member will be displayed here...', disabled: true %>
+				  </div>
+				  <%= f.submit 'Start chat', data: { disable_with: false }, class: "btn button w-100" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>
+
+
