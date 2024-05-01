@@ -119,9 +119,7 @@
 		<!-- End of Create Chat -->
 	</div> <!-- Layout -->
   <%= turbo_stream_from "notification_#{@current_user.id}" do %>
-  <%if @notifications.present?%>
-      <%= render 'partials/notification'%>
-    <%end%>
+    <%= render 'partials/notification'%>
   <%end%>
 </main>
 <!-- core JavaScript -->

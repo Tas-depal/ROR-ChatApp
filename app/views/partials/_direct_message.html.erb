@@ -1,9 +1,9 @@
-<div class="row filterDiscussions all read single">
-  <% unless current_user&.username == direct_message.channel_name%>
+<% unless current_user&.username == direct_message.channel_name%>
+  <div class="row filterDiscussions all read single">
     <div class="col-2">
       <i class="material-icons">person</i>
     </div>
-    <div class="col-10">
+    <div class="col-8">
       <% if current_user.present? %>
         <% channel_name = (direct_message.channel_name.strip.split(",")).select {|a| a!=current_user.username}.join %>
       <% else %>
@@ -11,7 +11,14 @@
       <% end %>
       <%= link_to channel_name, direct_message %>
     </div>
-  <% end %>
-</div>
+    <%= turbo_stream_from "private_msg_count_#{@current_user&.id}" %>
+    <% @msg_count = direct_message.messages.where.not(user_id: @current_user&.id).count %>
+    <% unless @msg_count.zero? %>
+      <div class="col-1 new bg-yellow" id="show_private_message_count_<%= direct_message.id%>">
+        <%= render 'partials/private_message_count', msg_count: direct_message.messages.where.not(user_id: @current_user&.id).count%>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 

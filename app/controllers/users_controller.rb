@@ -21,8 +21,10 @@ class UsersController < ApplicationController
     ids = User.where(username: params[:selected_user]).pluck(:id)
     ids.each do |id|
       member_ids += [id]
+      last_read = channel.last_read
+      last_read[id] = Time.now
       channel.member_id = id
-      channel.update(member_ids: member_ids)
+      channel.update(member_ids: member_ids, last_read: last_read)
     end
     redirect_to channel_path(params[:channel_id])
   end

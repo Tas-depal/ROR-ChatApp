@@ -6,8 +6,7 @@ class MessagesController < ApplicationController
     @current_user = current_user
     @message = @current_user.messages.new(content: msg_params[:content], channel_id: params[:channel_id])
     if @message.save
-      @notifications = @message.channel
-      flash[:alert] = "New Message"
+      render body: nil
     end
   end
 

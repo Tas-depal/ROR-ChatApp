@@ -28,9 +28,20 @@ class ChannelsController < ApplicationController
 
   def show
     @single_room = Channel.find_by_id(params[:id])
-    @room = Channel.new
-    @message = Message.new
-    @messages = @single_room&.messages
+    unless @single_room.nil?
+      unless @single_room.last_read.empty?
+        last_read = @single_room.last_read
+        last_read[@current_user.id] = params[:last_read_at]
+        @single_room.user_id=@current_user
+        @single_room.update!(last_read: last_read)
+      else
+        @single_room.user_id=@current_user
+        @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
+      end
+      @room = Channel.new
+      @message = Message.new
+      @messages = @single_room&.messages
+    end
     render 'index'
   end
 
