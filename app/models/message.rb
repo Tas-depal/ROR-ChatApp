@@ -19,7 +19,7 @@ class Message < ApplicationRecord
       next if member_id == user_id
       broadcast_append_to "notification_#{member_id}", partial: 'partials/notification',
                                                        locals: { message: 'New message' }
-      msg_count = channel.messages.where("created_at > ? AND user_id != ?", (channel.last_read["#{member_id}"]).to_time, member_id).count
+      msg_count = channel.messages.where("created_at > ? AND user_id != ?", (channel.last_read["#{member_id}"])&.to_time, member_id).count
       if channel.is_private
         private_channel_msg_count(member_id, msg_count)
       else
@@ -40,16 +40,16 @@ class Message < ApplicationRecord
   end
 
   def private_channel_msg_count(member_id, msg_count)
-    broadcast_append_to "private_msg_count_#{member_id}",
+    broadcast_append_to "private_msg_count_#{channel.id}_#{member_id}",
                         partial: 'partials/private_message_count',
                         locals: { msg_count: msg_count },
-                        target: "show_private_message_count_#{ channel.id }"
+                        target: "show_private_message_count_#{ channel.id }_#{ member_id }"
   end
 
   def public_channel_msg_count(member_id, msg_count)
-    broadcast_append_to "public_msg_count_#{member_id}",
+    broadcast_append_to "public_msg_count_#{channel.id}_#{member_id}",
                         partial: 'partials/public_message_count',
                         locals: { msg_count: msg_count },
-                        target: "show_public_message_count_#{ channel.id }"
+                        target: "show_public_message_count_#{ channel.id }_#{ member_id }"
   end
 end

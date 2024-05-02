@@ -28,15 +28,14 @@
               <div class="discussions">
                 <div class="row" style="margin-bottom: 2%;">
                   <div class="col-2">
-                    <%= image_tag 'img/avatars/avatar-female-3.jpg', class: 'avatar-md', alt: 'avatar' %>
+                    <%= image_tag avatar_image_tag(@current_user.username), class: 'avatar-md', alt: 'avatar' %>
                     <div class="status">
                       <a href="" data-toggle="modal" data-target="#add_private_channel">
-                        <i class="material-icons online" style="position: relative; border-radius: 50%; border: 5px solid white; top: -33px; left: -21px; font-size: 18px !important;">fiber_manual_record</i>
                       </a>
                     </div>
                   </div>
                   <div class="col-7" style="top: 14px;">
-                    <h5><%= @current_user.username%></h5>
+                    <h5><%= @current_user.username %></h5>
                   </div>
                   <div class="col-3" style="top: 6px;">
                     <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">menu</i></button>

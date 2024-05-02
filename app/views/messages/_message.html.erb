@@ -1,5 +1,7 @@
 <div class="message cont-<%= message.user.id %>">
-	<%= image_tag 'img/avatars/avatar-female-5.jpg', class: 'avatar-md', alt: 'avatar', data: { toggle: 'tooltip', placement: 'top' }, title: 'Keith' %>
+
+  <%= image_tag avatar_image_tag(message.user.username), class: 'avatar-md', alt: 'avatar', data: { toggle: 'tooltip', placement: 'top' } %>
+  
   <div class="text-main">
       <div class="text-group cont-<%= message.user.id %>">
         <div class="text cont-<%= message.user.id %>">

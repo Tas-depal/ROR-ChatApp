@@ -32,15 +32,13 @@ class ChannelsController < ApplicationController
       unless @single_room.last_read.empty?
         last_read = @single_room.last_read
         last_read[@current_user.id] = params[:last_read_at]
-        @single_room.user_id=@current_user
         @single_room.update!(last_read: last_read)
       else
-        @single_room.user_id=@current_user
         @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
       end
-      @room = Channel.new
       @message = Message.new
       @messages = @single_room&.messages
+      @msg_count = @single_room.messages.where("created_at > ? AND user_id != ?", (@single_room.last_read["#{@current_user&.id}"])&.to_time, @current_user&.id).count
     end
     render 'index'
   end
@@ -48,9 +46,9 @@ class ChannelsController < ApplicationController
   private
 
   def create_private_channel
-    @channels = Channel.create(create_private_channel_params)
-    unless @channels.save
-      @channels = Channel.find_by(channel_name: get_channel_name(@current_user&.username, params[:selected_user][0]))
+    @channels = Channel.find_by(channel_name: get_channel_name(@current_user&.username, params[:selected_user][0]))
+    unless @channels.present?
+      @channels = Channel.create(create_private_channel_params)
     end
     redirect_to channel_path(@channels.id)
   end
@@ -65,9 +63,9 @@ class ChannelsController < ApplicationController
   end
 
   def create_personal_channel
-    @channels = Channel.create(create_params(@current_user.username, true))
-    unless @channels.save
-      @channels = Channel.find_by(channel_name: @current_user.username)
+    @channels = Channel.find_by(channel_name: @current_user.username)
+    unless @channels.present?
+      @channels = Channel.create(create_params(@current_user.username, true))
     end
     redirect_to channel_path(@channels.id)
   end
@@ -79,7 +77,6 @@ class ChannelsController < ApplicationController
   def display_channels
     @channels = Channel.public_channels&.where('? = ANY(member_ids)', @current_user&.id)
     @direct_messages = Channel.where('? = ANY(member_ids) AND ? = is_private', @current_user&.id, true)
-    @notifications = []
   end
 
   def find_user

@@ -5,15 +5,11 @@
     </div>
 
     <div class="col-8">
-      <%= link_to channel&.channel_name, channel_path(id: channel.id, last_read_at: Time.now) %>
+      <%= link_to channel&.channel_name, channel_path(id: channel.id, last_read_at: Time.now), id: "channel_#{channel.id}_#{@current_user&.id}", data: { channel_id: channel.id, user_id: @current_user&.id } %>
     </div>
-      <%= turbo_stream_from "public_msg_count_#{@current_user&.id}" %>
-      <% @msg_count = channel.messages.where("created_at > ? AND user_id != ?", (channel.last_read["#{@current_user&.id}"])&.to_time, @current_user&.id).count %>
-      <%unless @msg_count.zero?%>
-        <div class="col-1 new bg-yellow" id="show_public_message_count_<%= channel.id%>">
-          <%= render 'partials/public_message_count', msg_count: @msg_count%>
-        </div>
-      <%end%>
+      <%= turbo_stream_from "public_msg_count_#{channel.id}_#{@current_user&.id}" %>
+          <div class="col-1 new bg-yellow" id="show_public_message_count_<%= channel.id %>_<%= @current_user&.id%>">
+            <%= render 'partials/public_message_count', msg_count: @msg_count%>
+          </div>
   </div>
 <%end%>
-

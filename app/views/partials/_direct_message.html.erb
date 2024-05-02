@@ -11,11 +11,11 @@
       <% end %>
       <%= link_to channel_name, direct_message %>
     </div>
-    <%= turbo_stream_from "private_msg_count_#{@current_user&.id}" %>
-    <% @msg_count = direct_message.messages.where.not(user_id: @current_user&.id).count %>
-    <% unless @msg_count.zero? %>
-      <div class="col-1 new bg-yellow" id="show_private_message_count_<%= direct_message.id%>">
-        <%= render 'partials/private_message_count', msg_count: direct_message.messages.where.not(user_id: @current_user&.id).count%>
+    <%= turbo_stream_from "private_msg_count_#{direct_message.id}_#{@current_user&.id}" %>
+    <% msg_count = direct_message.messages.where("created_at > ? AND user_id != ?", (direct_message.last_read["#{@current_user&.id}"])&.to_time, @current_user&.id).count %>
+    <% unless msg_count.zero? %>
+      <div class="col-1 new bg-yellow" id="show_private_message_count_<%= direct_message.id %>_<%= @current_user&.id%>">
+        <%= render 'partials/private_message_count', msg_count: msg_count%>
       </div>
     <% end %>
   </div>

@@ -31,4 +31,14 @@ $(document).ready(function() {
   $('.closeModal').on('click', function() {
       $('.userForm').trigger('reset');
   });
+
+});
+$('.channel-link').on('click', function() {
+  const channelId = this.dataset.channelId;
+  const userId = this.dataset.userId;
+  const divId = "show_public_message_count_"+channelId+"_"+userId;
+  const divToHide = document.getElementById(divId);
+  if (divToHide) {
+      divToHide.style.display = 'none';
+    }
 });
