@@ -1,1 +1,6 @@
-<span id="msg_#{direct_message.id}"><%=msg_count%></span>
+<% if msg_count.present? %>
+	<% unless msg_count.zero? %>
+		<span id="msg_#{direct_message.id}"class="badge badge-primary badge-pill"><%=msg_count%></span>
+  <% end %>
+<% end %>
+

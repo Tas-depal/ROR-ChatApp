@@ -1,0 +1,10 @@
+<div class="row" style="display: flex;">
+  <div class="col-10">
+    <%= button_to user, channels_path(is_private: true, selected_user: [user]), method: :post, class: "list-group-item  list-group-item-action" %>
+  </div>
+  <div class="col-2">
+    <%= button_to remove_group_member_path(member_id: member_id, channel_id: channel_id), style: 'background: none; border: none;', form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do %>
+      <i class="material-icons" style="color: red;">remove_circle</i>
+    <% end %>
+  </div>
+</div>

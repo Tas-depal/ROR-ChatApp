@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources 'logins'
   resources 'users'
   post '/add_members' => 'users#add_members'
+  delete '/remove_group_member' => 'channels#remove_group_member'
   resources 'channels' do
     resources 'messages'
   end

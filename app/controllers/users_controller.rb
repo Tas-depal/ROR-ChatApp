@@ -24,6 +24,8 @@ class UsersController < ApplicationController
       last_read = channel.last_read
       last_read[id] = Time.now
       channel.member_id = id
+      channel.add_member = true
+      channel.remove_member = false
       channel.update(member_ids: member_ids, last_read: last_read)
     end
     redirect_to channel_path(params[:channel_id])

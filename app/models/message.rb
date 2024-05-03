@@ -36,7 +36,7 @@ class Message < ApplicationRecord
     broadcast_append_to "direct_messages#{other_member_id}",
                         target: 'direct_messages_list',
                         partial: 'partials/direct_message',
-                        locals: { direct_message: channel, user: }
+                        locals: { direct_message: channel, user: user }
   end
 
   def private_channel_msg_count(member_id, msg_count)
