@@ -11,17 +11,26 @@ class Channel < ApplicationRecord
   
   def broadcast_channel
     unless self.is_private
-      broadcast_append_to "channels_#{member_id}"
       if add_member
+        broadcast_append_to "channels_#{member_id}"
+        user = User.find_by_id(member_id).username
         self.member_ids.each do |member|
           next if member == member_id
-          user = User.find_by_id(member).username
-          broadcast_append_to "add_member_to_channel#{member}",
-                          target: 'add_member',
+          broadcast_append_to "add_member_to_channel_#{member}",
+                          target: "add_member",
                           partial: 'partials/add_member',
                           locals: { user: user, member_id: member, channel_id: self.id }
         end
+      elsif remove_member
+        broadcast_remove_to("channels_#{member_id}", target: "remove_channel_#{self.id}")
+        self.member_ids.each do |member|
+          next if member == member_id
+          broadcast_remove_to("add_member_to_channel_#{member}", target: "remove_member_#{member_id}")
+        end
       end
+      self.add_member = false
+      self.remove_member = false
+      self.member_id = nil
     end
   end  
 end

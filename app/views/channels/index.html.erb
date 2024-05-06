@@ -74,7 +74,13 @@
                 </div> 
                 	<%= turbo_stream_from "channels_#{@current_user.id}" %>
                   <div class="list-group chats" role="tablist" id="channels">
-                    <%= render @channels %>
+                    <% @channels.each do |channel| %>
+                      <%if channel.present?%>
+                      <div id="remove_channel_#{channel.id}">
+                        <%= render 'channel', channel: channel%>
+                      </div>
+                      <%end%>
+                    <% end %>
                   </div>  
               </div>
 

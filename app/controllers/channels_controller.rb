@@ -30,8 +30,7 @@ class ChannelsController < ApplicationController
     channel = Channel.find_by_id(params[:channel_id])
     member_ids = channel.member_ids
     member_ids.delete(params[:member_id].to_i)
-    channel.member_id = nil
-    channel.add_member = false
+    channel.member_id = params[:member_id].to_i
     channel.remove_member = true
     channel.update(member_ids: member_ids)
     redirect_to channel_path(params[:channel_id])
@@ -40,14 +39,14 @@ class ChannelsController < ApplicationController
   def show
     @single_room = Channel.find_by_id(params[:id])
     unless @single_room.nil?
-      unless @single_room.last_read.empty?
-        last_read = @single_room.last_read
-        last_read[@current_user.id] = params[:last_read_at]
-        update_attr_accessor
-        @single_room.update!(last_read: last_read)
-      else
-        update_attr_accessor
-        @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
+      if params[:last_read_at].present?
+        unless @single_room.last_read.empty?
+          last_read = @single_room.last_read
+          last_read[@current_user.id] = params[:last_read_at]
+          @single_room.update!(last_read: last_read)
+        else
+          @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
+        end
       end
       @message = Message.new
       @messages = @single_room&.messages
@@ -121,9 +120,4 @@ class ChannelsController < ApplicationController
     @users = User.all_except(@current_user)
   end
 
-  def update_attr_accessor
-    @single_room.member_id = nil
-    @single_room.add_member = false
-    @single_room.remove_member = false
-  end
 end
