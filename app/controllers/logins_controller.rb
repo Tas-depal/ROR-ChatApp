@@ -2,12 +2,17 @@
 
 # Logins controller
 class LoginsController < ApplicationController
+  def new
+    @user = User.new
+  end
+
   def create
     @user = User.find_by(email: params[:email], password_digest: params[:password_digest])
     if @user
       log_in(@user)
     else
-      render 'new'
+      flash.now[:errors] = "Please check your email and password!!"
+      render :new, status: :unprocessable_entity
     end
   end
 

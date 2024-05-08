@@ -2,16 +2,27 @@
 
 # Message model
 class Message < ApplicationRecord
+
+  attr_accessor :files
+
+  after_create_commit :broadcast_message
   belongs_to :user
   belongs_to :channel
-  after_create_commit :broadcast_message
+  has_one_attached :attachment
 
   private
 
   def broadcast_message
-    broadcast_append_to channel
+    msg_broadcast
     private_channel_msg
     notify_new_msg
+  end
+
+  def msg_broadcast
+    if files.present?
+      self.attachment.attach(files)
+    end
+    broadcast_append_to channel
   end
 
   def notify_new_msg

@@ -39,18 +39,11 @@ class ChannelsController < ApplicationController
   def show
     @single_room = Channel.find_by_id(params[:id])
     unless @single_room.nil?
-      if params[:last_read_at].present?
-        unless @single_room.last_read.empty?
-          last_read = @single_room.last_read
-          last_read[@current_user.id] = params[:last_read_at]
-          @single_room.update!(last_read: last_read)
-        else
-          @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
-        end
-      end
+      update_last_read
       @message = Message.new
       @messages = @single_room&.messages
-      @msg_count = @single_room.messages.where("created_at > ? AND user_id != ?", (@single_room.last_read["#{@current_user&.id}"])&.to_time, @current_user&.id).count
+      @msg_count = @single_room.messages.where('created_at > ? AND user_id != ?',
+                                               @single_room.last_read[@current_user&.id.to_s]&.to_time, @current_user&.id).count
     end
     render 'index'
   end
@@ -59,14 +52,10 @@ class ChannelsController < ApplicationController
 
   def create_group_chat
     @channels = Channel.create(create_params(params['channel_name']))
-    if @channels.save
-      redirect_to channel_path(@channels.id)
-    else
-      @error_message = @channels.errors.full_messages[0]
-    end
+    redirect_to channel_path(@channels.id) if @channels.save
   end
 
-  def create_params(channel_name, is_private=false)
+  def create_params(channel_name, is_private = false)
     {
       channel_name: channel_name,
       member_ids: [session[:user_id]],
@@ -120,4 +109,15 @@ class ChannelsController < ApplicationController
     @users = User.all_except(@current_user)
   end
 
+  def update_last_read
+    return unless params[:last_read_at].present?
+
+    if @single_room.last_read.empty?
+      @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
+    else
+      last_read = @single_room.last_read
+      last_read[@current_user.id] = params[:last_read_at]
+      @single_room.update!(last_read:)
+    end
+  end
 end

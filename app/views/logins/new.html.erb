@@ -1,5 +1,14 @@
 <body class="start">
 	<main>
+		<% if flash.now[:errors].present? %>
+			<div class = "row mt-2">
+				<div class ="col-4"></div>				
+				<div class ="col-4 p-4 text-white font-weight-bold" style="background: indianred;">
+					<%= flash.now[:errors]%>
+				</div>
+				<div class ="col-4"></div>				
+			</div>
+		<% end %>
 		<div class="layout">
 			<!-- Start of Sign In -->
 			<div class="main order-md-1">
@@ -8,11 +17,6 @@
 						<div class="col-md-12">
 							<div class="content">
 								<h1>Sign in</h1>
-                <% if @user&.errors&.any? %>
-                  <% @user&.errors&.full_messages&.each do |message|%>\
-                     <h3><%= message %> </h3>
-                  <%end%>
-                <%end%>
                 </br>
                 <%= form_with model: @user, url: logins_path do |form| %>
 									<div class="form-group">

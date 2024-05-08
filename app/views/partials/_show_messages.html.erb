@@ -1,50 +1,59 @@
-<%if @single_room %>
-  <%= turbo_stream_from @single_room %>
-  <div class="main col-7">
-  	<div class="tab-content" id="nav-tabContent">
-  		<!-- Start of Babble -->
-  		<div class="babble tab-pane fade active show" id="list-chat" role="tabpanel" aria-labelledby="list-chat-list">
-  			<!-- Start of Chat -->
-  			<div class="chat" id="chat1">
-        <!-- Start of top bar of messages --> 
-          <%= render 'partials/messages_top' %>         
-        <!-- End of top bar of messages -->          
-  				
-  				<div class="content" id="content">
-  					<div class="container">
-  						<div class="col-md-12" id="messages">
-  							<div class="date">
-  								<hr>
-  								<span>Today</span>
-  								<hr>
-  							</div>
-  							<%= render @messages%>
-  						</div>
-  					</div>
-  				</div>
-  				<div class="container">
-  					<div class="col-md-12">
-  						<div class="bottom">
-                <%= form_with(model: [@single_room ,@message], remote: true, class: "d-flex position-relative w-100", id: 'message_send_form') do |f| %>
-                  <%= f.text_area :content, id: 'chat-text', class: "form-control", autocomplete: 'off', placeholder: "Start typing for reply..." %>
-  								<button class="btn emoticons"><i class="material-icons">insert_emoticon</i></button>
-
-                  <%= f.button "", data: { disable_with: false }, class: "btn send" do %>
-                    <i class="material-icons">send</i>
-                  <% end %>
-  							<% end %>
-  							<label>
-  								<input type="file">
-  								<span class="btn attach d-sm-block d-none"><i class="material-icons">attach_file</i></span>
-  							</label> 
-  						</div>
-  					</div>
-  				</div>
-  			</div>
-  			<!-- End of Chat -->
-  		</div>
-  	</div>
-  </div>
+<% if @single_room %>
+  <% if @single_room.member_ids.include?(@current_user.id) %>
+    <%= turbo_stream_from @single_room %>
+    <div class="main col-7">
+    	<div class="tab-content" id="nav-tabContent">
+    		<!-- Start of Babble -->
+    		<div class="babble tab-pane fade active show" id="list-chat" role="tabpanel" aria-labelledby="list-chat-list">
+    			<!-- Start of Chat -->
+    			<div class="chat" id="chat1">
+          <!-- Start of top bar of messages --> 
+            <%= render 'partials/messages_top' %>         
+          <!-- End of top bar of messages -->          
+    				
+    				<div class="content" id="content">
+    					<div class="container">
+    						<div class="col-md-12" id="messages">
+    							<div class="date">
+    								<hr>
+    								<span>Today</span>
+    								<hr>
+    							</div>
+    							<%= render @messages%>
+    						</div>
+    					</div>
+    				</div>
+    				<div class="container">
+    					<div class="col-md-12">
+    						<div class="bottom">
+                  <%= form_with(model: [@single_room ,@message], remote: true, class: "d-flex position-relative w-100", id: 'message_send_form', :multipart => true) do |f| %>
+                    <div class="row w-100">
+                      <div class="col-10">
+                        <%= f.text_area :content, id: 'chat-text', class: "form-control", autocomplete: 'off', placeholder: "Start typing for reply..." %>
+        								<button class="btn emoticons"><i class="material-icons">insert_emoticon</i></button>
+                      </div>                    
+                      <div class="col-1 p-0">
+                        <%= f.button "", data: { disable_with: false }, class: "btn send" do %>
+                          <i class="material-icons">send</i>
+                        <% end %>
+                      </div>
+                      <div class="col-1 p-0">
+          							<%= f.label :attachment do %>
+                          <%= f.file_field :attachment %>
+                          <span class="btn attach d-sm-block"><i class="material-icons">attach_file</i></span>
+                        <% end %>
+                      </div>
+                    </div>
+    							<% end %>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    			<!-- End of Chat -->
+    		</div>
+    	</div>
+    </div>
+  <% end %>
 <%end%>
 <script>
   $(document).on('turbo:submit-end', function() {

@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     if @user.save
       log_in(@user)
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 

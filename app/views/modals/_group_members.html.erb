@@ -12,9 +12,7 @@
         <% @single_room&.member_ids&.each do |member| %>
           <% next if member == @current_user.id %>
           <% user = User.find_by_id(member).username %>
-          <div id="remove_member_#{member}">
-            <%= render 'partials/add_member', user: user, member_id: member, channel_id: @single_room.id%>
-          </div>
+          <%= render 'partials/add_member', user: user, member_id: member, channel_id: @single_room.id%>
         <% end %>
 			</div>
 		</div>

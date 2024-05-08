@@ -5,6 +5,22 @@
       <div class="text-group cont-<%= message.user.id %>">
         <div class="text cont-<%= message.user.id %>">
           <p><%= message.content %></p>
+          <%if message.attachment.attached?%>
+            <%file = message.attachment %>
+            <p>
+              <% if file.representable? %>
+                <%= link_to rails_blob_path(file, disposition: "attachment") do %>
+                  <%= image_tag url_for(message.attachment), style: "width: 200px; height:200px" %>
+                <% end %>
+                <%= file.filename.to_s%>
+              <% else %>
+                <%= link_to rails_blob_path(file, disposition: "attachment") do %>
+                  <%= image_tag "file.jpg", alt: "Download file", style: "width: 50px; height: 50px;" %>
+                <% end %>
+                <%= file.filename.to_s%>
+              <% end %>
+            </p>
+          <%end%>
         </div>
       </div>
       <span>
