@@ -21,6 +21,8 @@ class Channel < ApplicationRecord
                           partial: 'partials/add_member',
                           locals: { user: user, member_id: member, channel_id: self.id }
         end
+      # elsif remove_member
+      #   broadcast_remove_to("remove_channels_#{member_id}")
       end
       self.add_member = false
       self.remove_member = false

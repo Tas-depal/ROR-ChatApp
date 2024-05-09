@@ -1,22 +1,8 @@
+<style>.dropdown-toggle::after{ display: none !important;  }</style>
 <main>
 	<div class="layout row">
-		<!-- Start of Navigation -->
-		<div class="navigation bg-primary col-2">
-			<div class="container">
-				<div class="inside">
-					<div class="nav nav-tab menu">
-						<a href="#settings" data-toggle="tab"><i class="material-icons">settings</i></a>
-						<%= button_to login_path(@current_user), method: :delete, class: "btn power", remote: true do %>
-						  <i class="material-icons">power_settings_new</i>
-						<% end %>
-
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- End of Navigation -->
 		<!-- Start of Sidebar -->
-		<div class="sidebar col-3" id="sidebar">
+		<div class="sidebar col-3 ml-5" id="sidebar">
 			<div class="container">
 				<div class="col-md-12">
 					<div class="tab-content">
@@ -37,8 +23,20 @@
                   <div class="col-7" style="top: 14px;">
                     <h5><%= @current_user.username %></h5>
                   </div>
-                  <div class="col-3" style="top: 6px;">
-                    <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">menu</i></button>
+                  <div class="col-3 dropdown" style="top: 6px;">
+                    <button class="btn dropdown-toggle btn-primary" style="color: #808080;" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">menu</i></button>
+                    <div class="dropdown-menu bg-primary" aria-labelledby="dropdownMenuButton">
+
+                      <%= link_to edit_user_path(@current_user.id), class: "btn power dropdown-item", remote: true do %>
+                        <i class="material-icons">settings</i>
+                        <span> Edit profile </span>
+                      <% end %>
+
+                      <%= button_to login_path(@current_user), method: :delete, class: "btn power dropdown-item", remote: true do %>
+                        <i class="material-icons">power_settings_new</i>
+                        <span> Logout </span>
+                      <% end %>
+                    </div>
                   </div>
                 </div>                  
               </div>
@@ -72,9 +70,9 @@
                     <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">add</i></button>
                   </div>
                 </div> 
-                	<%= turbo_stream_from "channels_#{@current_user.id}" %>
+                	<%= turbo_stream_from "channels_#{@current_user.id}" %>                  
                   <div class="list-group chats" role="tablist" id="channels">
-                      <%= render @channels %>
+                    <%= render @channels %>
                   </div>  
               </div>
 
@@ -119,7 +117,7 @@
 	</div> <!-- Layout -->
   <%= turbo_stream_from "notification_#{@current_user.id}" do %>
     <%= render 'partials/notification'%>
-  <%end%>
+  <%end%>      
 </main>
 <!-- core JavaScript -->
 <script>

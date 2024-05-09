@@ -28,11 +28,11 @@ class ChannelsController < ApplicationController
 
   def remove_group_member
     channel = Channel.find_by_id(params[:channel_id])
-    member_ids = channel.member_ids
-    member_ids.delete(params[:member_id].to_i)
+    member_id = channel.member_ids
+    member_id.delete(params[:member_id].to_i)
     channel.member_id = params[:member_id].to_i
     channel.remove_member = true
-    channel.update(member_ids: member_ids)
+    channel.update(member_ids: member_id)
     redirect_to channel_path(params[:channel_id])
   end
 
@@ -42,8 +42,6 @@ class ChannelsController < ApplicationController
       update_last_read
       @message = Message.new
       @messages = @single_room&.messages
-      @msg_count = @single_room.messages.where('created_at > ? AND user_id != ?',
-                                               @single_room.last_read[@current_user&.id.to_s]&.to_time, @current_user&.id).count
     end
     render 'index'
   end
@@ -55,12 +53,12 @@ class ChannelsController < ApplicationController
     redirect_to channel_path(@channels.id) if @channels.save
   end
 
-  def create_params(channel_name, is_private = false)
+  def create_params(name, is_pvt = false)
     {
-      channel_name: channel_name,
+      channel_name: name,
       member_ids: [session[:user_id]],
       creator_id: session[:user_id],
-      is_private: is_private
+      is_private: is_pvt
     }
   end
 

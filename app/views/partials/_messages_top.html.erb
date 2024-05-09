@@ -26,7 +26,7 @@
 					</div>
 				</div>
         <% unless @single_room.is_private %>
-  				<button class="btn connect d-md-block d-none" name="1" data-toggle="modal" data-target="#showMembers"><i class="material-icons md-30">group</i><span ><%= @single_room.member_ids.count %></span></button>
+  				<button class="btn connect d-md-block d-none" name="1" data-toggle="modal" data-target="#showMembers"><i class="material-icons md-30">group</i></button>
         <% end %>
 				<div class="dropdown">
 					<button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons md-30">more_vert</i></button>
