@@ -1,4 +1,4 @@
-<!-- Modal to show mebers of the group -->
+<!-- Modal to show members of the group -->
 <div class="modal fade" id="showMembers" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top: -17%; margin-left: 20%;">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="requests" style="border: 1px solid;">
@@ -9,10 +9,15 @@
 			</div>
       <%= turbo_stream_from "add_member_to_channel_#{@current_user.id}" %>
 			<div class="content list-group", id="add_member">
+        <div class="row" style="display: flex;">
+          <div class="col-10">
+            <%= button_to "#{@current_user.username}(You)", channels_path(is_private: true), method: :post, class: "list-group-item  list-group-item-action" %>
+          </div>
+        </div>
         <% @single_room&.member_ids&.each do |member| %>
           <% next if member == @current_user.id %>
-          <% user = User.find_by_id(member).username %>
-          <%= render 'partials/add_member', user: user, member_id: member, channel_id: @single_room.id%>
+          <% username = User.find_by_id(member).username %>
+          <%= render 'partials/add_member', user: username, member_id: member, channel_id: @single_room.id%>
         <% end %>
 			</div>
 		</div>

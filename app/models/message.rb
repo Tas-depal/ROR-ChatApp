@@ -2,13 +2,12 @@
 
 # Message model
 class Message < ApplicationRecord
-
   attr_accessor :files
 
   after_create_commit :broadcast_message
   belongs_to :user
   belongs_to :channel
-  has_one_attached :attachment
+  has_many_attached :attachments
 
   private
 
@@ -19,23 +18,19 @@ class Message < ApplicationRecord
   end
 
   def msg_broadcast
-    if files.present?
-      self.attachment.attach(files)
-    end
+    attachments.attach(files) if files.present?
     broadcast_append_to channel
   end
 
   def notify_new_msg
     channel.member_ids.each do |member_id|
       next if member_id == user_id
+
       broadcast_append_to "notification_#{member_id}", partial: 'partials/notification',
                                                        locals: { message: 'New message' }
-      msg_count = channel.messages.where("created_at > ? AND user_id != ?", (channel.last_read["#{member_id}"])&.to_time, member_id).count
-      if channel.is_private
-        private_channel_msg_count(member_id, msg_count)
-      else
-        public_channel_msg_count(member_id, msg_count)
-      end
+      msg_count = channel.messages.where('created_at > ? AND user_id != ?', channel.last_read[member_id.to_s]&.to_time,
+                                         member_id).count
+      update_msg_count(member_id, msg_count)
     end
   end
 
@@ -47,20 +42,28 @@ class Message < ApplicationRecord
     broadcast_append_to "direct_messages#{other_member_id}",
                         target: 'direct_messages_list',
                         partial: 'partials/direct_message',
-                        locals: { direct_message: channel, user: user }
+                        locals: { direct_message: channel, user: }
   end
 
   def private_channel_msg_count(member_id, msg_count)
     broadcast_append_to "private_msg_count_#{channel.id}_#{member_id}",
                         partial: 'partials/private_message_count',
-                        locals: { msg_count: msg_count },
-                        target: "show_private_message_count_#{ channel.id }_#{ member_id }"
+                        locals: { msg_count: , direct_message: channel, current_user: user},
+                        target: "show_private_message_count_#{channel.id}_#{member_id}"
   end
 
   def public_channel_msg_count(member_id, msg_count)
     broadcast_append_to "public_msg_count_#{channel.id}_#{member_id}",
                         partial: 'partials/public_message_count',
-                        locals: { msg_count: msg_count },
-                        target: "show_public_message_count_#{ channel.id }_#{ member_id }"
+                        locals: { msg_count: },
+                        target: "show_public_message_count_#{channel.id}_#{member_id}"
+  end
+
+  def update_msg_count(member_id, msg_count)
+    if channel.is_private
+      private_channel_msg_count(member_id, msg_count)
+    else
+      public_channel_msg_count(member_id, msg_count)
+    end
   end
 end

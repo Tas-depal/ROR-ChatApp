@@ -33,7 +33,6 @@ class ChannelsController < ApplicationController
     channel.member_id = params[:member_id].to_i
     channel.remove_member = true
     channel.update(member_ids: member_id)
-    redirect_to channel_path(params[:channel_id])
   end
 
   def show
@@ -53,7 +52,7 @@ class ChannelsController < ApplicationController
     redirect_to channel_path(@channels.id) if @channels.save
   end
 
-  def create_params(name, is_pvt = false)
+  def create_params(name, is_pvt: false)
     {
       channel_name: name,
       member_ids: [session[:user_id]],
@@ -64,17 +63,13 @@ class ChannelsController < ApplicationController
 
   def create_personal_channel
     @channels = Channel.find_by(channel_name: @current_user.username)
-    unless @channels.present?
-      @channels = Channel.create(create_params(@current_user.username, true))
-    end
+    @channels = Channel.create(create_params(@current_user.username, is_pvt: true)) unless @channels.present?
     redirect_to channel_path(@channels.id)
   end
 
   def create_private_channel
     @channels = Channel.find_by(channel_name: get_channel_name(@current_user&.username, params[:selected_user][0]))
-    unless @channels.present?
-      @channels = Channel.create(create_private_channel_params)
-    end
+    @channels = Channel.create(create_private_channel_params) unless @channels.present?
     redirect_to channel_path(@channels.id)
   end
 
@@ -82,7 +77,8 @@ class ChannelsController < ApplicationController
     {
       channel_name: get_channel_name(@current_user&.username, params[:selected_user][0]),
       is_private: true,
-      member_ids: [session[:user_id], find_user]
+      member_ids: [session[:user_id], find_user],
+      last_read: { session[:user_id].to_s => Time.now, find_user.to_s => Time.now }
     }
   end
 

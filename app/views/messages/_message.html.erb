@@ -4,23 +4,32 @@
   <div class="text-main">
       <div class="text-group cont-<%= message.user.id %>">
         <div class="text cont-<%= message.user.id %>">
-          <p><%= message.content %></p>
-          <%if message.attachment.attached?%>
-            <%file = message.attachment %>
-            <p>
-              <% if file.representable? %>
-                <%= link_to rails_blob_path(file, disposition: "attachment") do %>
-                  <%= image_tag url_for(message.attachment), style: "width: 200px; height:200px" %>
-                <% end %>
-                <%= file.filename.to_s%>
-              <% else %>
-                <%= link_to rails_blob_path(file, disposition: "attachment") do %>
-                  <%= image_tag "file.jpg", alt: "Download file", style: "width: 50px; height: 50px;" %>
-                <% end %>
-                <%= file.filename.to_s%>
-              <% end %>
-            </p>
+          <%if message.attachments.attached?%>
+            <style>
+              .text-group .cont-<%= message.user.id %>
+              {
+                background: white !important;
+              }
+            </style>
+            <div class="row mb-3">
+              <%message.attachments.each do |file|%>
+                <div class="col-6 mb-3">
+                  <% if file.representable? %>
+                    <%= link_to rails_blob_path(file, disposition: "attachment") do %>
+                      <%= image_tag url_for(file), style: "width: 200px; height:200px" %>
+                    <% end %>
+                    <%= file.filename.to_s%>
+                  <% else %>
+                    <%= link_to rails_blob_path(file, disposition: "attachment") do %>
+                      <%= image_tag "file.jpg", alt: "Download file", style: "width: 50px; height: 50px;" %>
+                    <% end %>
+                    <%= file.filename.to_s%>
+                  <% end %>
+                </div>
+              <%end%>
+            </div>
           <%end%>
+          <p><%= message.content %></p>
         </div>
       </div>
       <span>

@@ -26,19 +26,22 @@
 					</div>
 				</div>
         <% unless @single_room.is_private %>
-  				<button class="btn connect d-md-block d-none" name="1" data-toggle="modal" data-target="#showMembers"><i class="material-icons md-30">group</i></button>
-        <% end %>
-				<div class="dropdown">
-					<button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons md-30">more_vert</i></button>
-					<div class="dropdown-menu dropdown-menu-right">
-						<button class="dropdown-item connect" name="1"><i class="material-icons">phone_in_talk</i>Voice Call</button>
-						<button class="dropdown-item connect" name="1"><i class="material-icons">videocam</i>Video Call</button>
-						<hr>
-						<button class="dropdown-item"><i class="material-icons">clear</i>Clear History</button>
-						<button class="dropdown-item"><i class="material-icons">block</i>Block Contact</button>
-						<button class="dropdown-item"><i class="material-icons">delete</i>Delete Contact</button>
+          <%= turbo_stream_from "update_member_count_#{@current_user.id}" %>
+          <div id="member_count">
+	  				<%= render 'partials/members_count', msg_count: @single_room.member_ids.count %>
+	  			</div>
+					<div class="dropdown">
+						<button class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons md-30">more_vert</i></button>
+						<div class="dropdown-menu dropdown-menu-right">
+							<button class="dropdown-item connect" name="1"><i class="material-icons">phone_in_talk</i>Voice Call</button>
+							<button class="dropdown-item connect" name="1"><i class="material-icons">videocam</i>Video Call</button>
+							<hr>
+							<button class="dropdown-item"><i class="material-icons">clear</i>Clear History</button>
+							<button class="dropdown-item"><i class="material-icons">block</i>Block Contact</button>
+							<button class="dropdown-item"><i class="material-icons">delete</i>Delete Contact</button>
+						</div>
 					</div>
-				</div>
+        <% end %>
 			</div>
 		</div>
 	</div>

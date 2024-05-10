@@ -2,18 +2,11 @@
 
 # Users controller
 class UsersController < ApplicationController
-
   def add_members
     channel = Channel.find_by_id(params[:channel_id])
-    member_ids = channel.member_ids
     ids = User.where(username: params[:selected_user]).pluck(:id)
     ids.each do |id|
-      member_ids += [id]
-      last_read = channel.last_read
-      last_read[id] = Time.now
-      channel.member_id = id
-      channel.add_member = true
-      channel.update(member_ids: member_ids, last_read: last_read)
+      add_members_to_channel(channel.member_ids, id, channel)
     end
     redirect_to channel_path(params[:channel_id])
   end
@@ -45,6 +38,15 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def add_members_to_channel(channel_member_ids, id, channel)
+    channel_member_ids += [id]
+    last_read_msg = channel.last_read
+    last_read_msg[id] = Time.now
+    channel.member_id = id
+    channel.add_member = true
+    channel.update(member_ids: channel_member_ids, last_read: last_read_msg)
+  end
 
   def user_params
     params.require(:user).permit(:username, :email, :password_digest)

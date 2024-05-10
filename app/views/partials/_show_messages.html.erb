@@ -8,7 +8,7 @@
     			<!-- Start of Chat -->
     			<div class="chat" id="chat1">
           <!-- Start of top bar of messages --> 
-            <%= render 'partials/messages_top' %>         
+            <%= render 'partials/messages_top' %>        
           <!-- End of top bar of messages -->          
     				
     				<div class="content" id="content">
@@ -38,8 +38,8 @@
                         <% end %>
                       </div>
                       <div class="col-1 p-0">
-          							<%= f.label :attachment do %>
-                          <%= f.file_field :attachment %>
+          							<%= f.label :attachments do %>
+                          <%= f.file_field :attachments, multiple: true %>
                           <span class="btn attach d-sm-block"><i class="material-icons">attach_file</i></span>
                         <% end %>
                       </div>
