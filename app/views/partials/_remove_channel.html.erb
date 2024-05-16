@@ -1,3 +1,17 @@
 <div class="fixed-top d-flex justify-content-center" >
-	<script>location.reload();</script>
+	<script>
+		if(<%=remove%>)
+		{
+			if(window.location.href=='http://127.0.0.1:3000/channels/<%=channel_id%>')
+			{
+				window.location.replace('http://127.0.0.1:3000/channels/<%=personal_channel%>')
+			}
+			else{
+				location.reload();
+			}
+		}
+		else{
+			location.reload();
+		}
+	</script>
 </div>

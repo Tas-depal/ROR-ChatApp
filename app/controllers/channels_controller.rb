@@ -42,7 +42,11 @@ class ChannelsController < ApplicationController
       @message = Message.new
       @messages = @single_room&.messages
     end
-    render 'index'
+    if @single_room.present? && @single_room.member_ids.include?(@current_user.id)
+      render 'index'
+    else
+      redirect_to not_found_path
+    end
   end
 
   private
@@ -57,7 +61,7 @@ class ChannelsController < ApplicationController
       channel_name: name,
       member_ids: [session[:user_id]],
       creator_id: session[:user_id],
-      is_private: is_pvt
+      is_private: is_pvt,
     }
   end
 
@@ -78,7 +82,8 @@ class ChannelsController < ApplicationController
       channel_name: get_channel_name(@current_user&.username, params[:selected_user][0]),
       is_private: true,
       member_ids: [session[:user_id], find_user],
-      last_read: { session[:user_id].to_s => Time.now, find_user.to_s => Time.now }
+      last_read: { session[:user_id].to_s => Time.now, find_user.to_s => Time.now },
+      room_presence: { @current_user.id.to_s => true, find_user.to_s => false }
     }
   end
 
@@ -104,14 +109,25 @@ class ChannelsController < ApplicationController
   end
 
   def update_last_read
-    return unless params[:last_read_at].present?
 
-    if @single_room.last_read.empty?
-      @single_room.update!(last_read: { @current_user.id => params[:last_read_at] })
-    else
-      last_read = @single_room.last_read
-      last_read[@current_user.id] = params[:last_read_at]
-      @single_room.update!(last_read:)
+    update_room_presence
+
+    last_read = @single_room.last_read
+    last_read[@current_user.id.to_s] = Time.now
+    @single_room.update!(last_read:)
+  end
+
+  def update_room_presence
+    current_user_channel_ids = Channel.pluck(:id, :member_ids).select { |array| array[1].include?(@current_user.id) }.map { |array| array[0] }
+    current_user_channels = Channel.where(id: current_user_channel_ids)
+    current_user_channels.each do |channel|
+      room_presence = channel.room_presence
+      if channel == @single_room
+        room_presence[@current_user.id.to_s] = true
+      else
+        room_presence[@current_user.id.to_s] = false
+      end
+      channel.update(room_presence:)
     end
   end
 end

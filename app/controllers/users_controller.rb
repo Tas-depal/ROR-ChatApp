@@ -37,15 +37,17 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-  private
+private
 
   def add_members_to_channel(channel_member_ids, id, channel)
     channel_member_ids += [id]
     last_read_msg = channel.last_read
+    room_presence = channel.room_presence
     last_read_msg[id] = Time.now
+    room_presence[id] = false
     channel.member_id = id
     channel.add_member = true
-    channel.update(member_ids: channel_member_ids, last_read: last_read_msg)
+    channel.update(member_ids: channel_member_ids, last_read: last_read_msg, room_presence:)
   end
 
   def user_params

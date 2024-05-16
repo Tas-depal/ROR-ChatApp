@@ -104,6 +104,13 @@
 			</div>
 		</div>
 
+    <%= turbo_stream_from "notification_#{@current_user.id}" do %>
+      <%= render 'partials/notification'%>
+    <%end%>   
+
+    <%= turbo_stream_from "remove_channels_#{@current_user.id}" do %>
+      <%= render 'partials/remove_channel'%>
+    <%end%>      
 		<!-- Start Show messages -->
 			<%= render 'partials/show_messages' %>
 		<!-- End Show messages -->
@@ -115,13 +122,6 @@
 			<%= render 'modals/group_members' %>
 		<!-- End of Create Chat -->
 	</div> <!-- Layout -->
-  <%= turbo_stream_from "notification_#{@current_user.id}" do %>
-    <%= render 'partials/notification'%>
-  <%end%>   
-
-  <%= turbo_stream_from "remove_channels_#{@current_user.id}" do %>
-    <%= render 'partials/remove_channel'%>
-  <%end%>      
 </main>
 <!-- core JavaScript -->
 <script>

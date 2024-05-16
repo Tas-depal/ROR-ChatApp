@@ -10,4 +10,6 @@ Rails.application.routes.draw do
   resources 'channels' do
     resources 'messages'
   end
+
+  get '/not_found' => 'errors#not_found'
 end

@@ -38,9 +38,11 @@ class Channel < ApplicationRecord
     if add_member
       broadcast_added_members
     elsif remove_member
-      broadcast_append_to "remove_channels_#{member_id}", partial: 'partials/remove_channel'
+      user = User.find_by_id(member_id).username
+      personal_channel = Channel.find_by(channel_name: user).id
+      broadcast_append_to "remove_channels_#{member_id}", partial: 'partials/remove_channel', locals: { remove: 'true', channel_id: id, personal_channel: }
       member_ids.each do |member|
-        broadcast_append_to "remove_channels_#{member}", partial: 'partials/remove_channel'
+        broadcast_append_to "remove_channels_#{member}", partial: 'partials/remove_channel', locals: { remove: 'false', channel_id: id, personal_channel: '' }
       end
     end
     update_attr_accessor

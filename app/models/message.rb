@@ -7,7 +7,7 @@ class Message < ApplicationRecord
   after_create_commit :broadcast_message
   belongs_to :user
   belongs_to :channel
-  has_many_attached :attachments
+  has_many_attached :attachments, dependent: :destroy
 
   private
 
@@ -25,11 +25,14 @@ class Message < ApplicationRecord
   def notify_new_msg
     channel.member_ids.each do |member_id|
       next if member_id == user_id
-
       broadcast_append_to "notification_#{member_id}", partial: 'partials/notification',
                                                        locals: { message: 'New message' }
-      msg_count = channel.messages.where('created_at > ? AND user_id != ?', channel.last_read[member_id.to_s]&.to_time,
+      unless channel.room_presence[member_id.to_s]
+        msg_count = channel.messages.where('created_at > ? AND user_id != ?', channel.last_read[member_id.to_s]&.to_time,
                                          member_id).count
+      else
+        msg_count = 0
+      end
       update_msg_count(member_id, msg_count)
     end
   end
@@ -45,25 +48,11 @@ class Message < ApplicationRecord
                         locals: { direct_message: channel, user: }
   end
 
-  def private_channel_msg_count(member_id, msg_count)
-    broadcast_append_to "private_msg_count_#{channel.id}_#{member_id}",
-                        partial: 'partials/private_message_count',
-                        locals: { msg_count: , direct_message: channel, current_user: user},
-                        target: "show_private_message_count_#{channel.id}_#{member_id}"
-  end
-
-  def public_channel_msg_count(member_id, msg_count)
-    broadcast_append_to "public_msg_count_#{channel.id}_#{member_id}",
-                        partial: 'partials/public_message_count',
-                        locals: { msg_count: },
-                        target: "show_public_message_count_#{channel.id}_#{member_id}"
-  end
-
   def update_msg_count(member_id, msg_count)
-    if channel.is_private
-      private_channel_msg_count(member_id, msg_count)
-    else
-      public_channel_msg_count(member_id, msg_count)
-    end
+    broadcast_append_to "msg_count_#{channel.id}_#{member_id}",
+                        partial: 'partials/message_count',
+                        locals: { msg_count: , channel: },
+                        target: "show_message_count_#{channel.id}_#{member_id}"
   end
+
 end
