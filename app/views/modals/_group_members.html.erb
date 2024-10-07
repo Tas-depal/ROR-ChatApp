@@ -7,7 +7,6 @@
         <button type="button" class="btn" data-dismiss="modal" aria-label="Add member" style="margin-left: 30%;" data-toggle="modal" data-target="#addMembers"><i class="material-icons">group_add</i></button>
 				<button type="button" class="btn closeModal" data-dismiss="modal" aria-label="Close" ><i class="material-icons">close</i></button>
 			</div>
-      <%= turbo_stream_from "add_member_to_channel_#{@current_user.id}" %>
 			<div class="content list-group", id="add_member">
         <div class="row" style="display: flex;">
           <div class="col-10">

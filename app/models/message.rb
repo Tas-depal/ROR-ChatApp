@@ -51,8 +51,8 @@ class Message < ApplicationRecord
   def update_msg_count(member_id, msg_count)
     broadcast_append_to "msg_count_#{channel.id}_#{member_id}",
                         partial: 'partials/message_count',
-                        locals: { msg_count: , channel: },
-                        target: "show_message_count_#{channel.id}_#{member_id}"
+                        locals: { msg_count: },
+                        target: "show_message_count"
   end
 
 end

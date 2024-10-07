@@ -26,7 +26,6 @@
 					</div>
 				</div>
         <% unless @single_room.is_private %>
-          <%= turbo_stream_from "update_member_count_#{@current_user.id}" %>
           <div id="member_count">
 	  				<%= render 'partials/members_count', msg_count: @single_room.member_ids.count %>
 	  			</div>

@@ -1,4 +1,4 @@
-<% if @single_room && @single_room.member_ids.include?(@current_user.id) %>
+<% if @single_room %>
   <%= turbo_stream_from @single_room %>
   <div class="main col-7">
   	<div class="tab-content" id="nav-tabContent">

@@ -11,38 +11,19 @@ class Channel < ApplicationRecord
 
   private
 
-  def add_and_update_channel_members(member, username)
-    broadcast_append_to "add_member_to_channel_#{member}",
-                        target: 'add_member',
-                        partial: 'partials/add_member',
-                        locals: { user: username, member_id: member, channel_id: id }
-    broadcast_replace_to "update_member_count_#{member}",
-                         target: 'member_count',
-                         partial: 'partials/members_count',
-                         locals: { msg_count: member_ids.count }
-  end
-
-  def broadcast_added_members
-    broadcast_append_to "channels_#{member_id}"
-    user = User.find_by_id(member_id).username
-    member_ids.each do |member|
-      next if member == member_id
-
-      add_and_update_channel_members(member, user)
-    end
-  end
 
   def broadcast_channel
     return if is_private
 
-    if add_member
-      broadcast_added_members
-    elsif remove_member
-      user = User.find_by_id(member_id).username
-      personal_channel = Channel.find_by(channel_name: user).id
-      broadcast_append_to "remove_channels_#{member_id}", partial: 'partials/remove_channel', locals: { remove: 'true', channel_id: id, personal_channel: }
+    if add_member || remove_member
+      user = User.find_by_id(member_id)
+      if user.present?
+        personal_channel = Channel.find_by(channel_name: user.username)&.id
+        personal_channel = Channel.create(channel_name: user.username, is_private: true, member_ids: [user.id], creator_id: [user.id], last_read: {user.id.to_s=> Time.now}, room_presence: {user.id.to_s=> Time.now})&.id unless personal_channel.present?
+        broadcast_append_to "add_remove_channels_#{member_id}", partial: 'partials/add_remove_channel', locals: { remove: 'true', channel_id: id, personal_channel: }
+      end
       member_ids.each do |member|
-        broadcast_append_to "remove_channels_#{member}", partial: 'partials/remove_channel', locals: { remove: 'false', channel_id: id, personal_channel: '' }
+        broadcast_append_to "add_remove_channels_#{member}", partial: 'partials/add_remove_channel', locals: { remove: 'false', channel_id: id, personal_channel: '' }
       end
     end
     update_attr_accessor

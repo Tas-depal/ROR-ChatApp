@@ -37,12 +37,10 @@ class ChannelsController < ApplicationController
 
   def show
     @single_room = Channel.find_by_id(params[:id])
-    unless @single_room.nil?
+    if @single_room.present? && @single_room.member_ids.include?(@current_user.id)
       update_last_read
       @message = Message.new
       @messages = @single_room&.messages
-    end
-    if @single_room.present? && @single_room.member_ids.include?(@current_user.id)
       render 'index'
     else
       redirect_to not_found_path

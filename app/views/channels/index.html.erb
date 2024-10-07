@@ -70,7 +70,6 @@
                     <button class="btn" style="color: #808080;" data-toggle="modal" data-target="#add_private_channel"><i class="material-icons">add</i></button>
                   </div>
                 </div> 
-                	<%= turbo_stream_from "channels_#{@current_user.id}" %>                  
                   <div class="list-group chats" role="tablist" id="channels">
                     <%= render @channels %>
                   </div>  
@@ -108,8 +107,8 @@
       <%= render 'partials/notification'%>
     <%end%>   
 
-    <%= turbo_stream_from "remove_channels_#{@current_user.id}" do %>
-      <%= render 'partials/remove_channel'%>
+    <%= turbo_stream_from "add_remove_channels_#{@current_user.id}" do %>
+      <%= render 'partials/add_remove_channel'%>
     <%end%>      
 		<!-- Start Show messages -->
 			<%= render 'partials/show_messages' %>
