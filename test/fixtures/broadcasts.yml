@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 1
+  created_by: 1
+  member_ids: 1
+  broadcast_msg: MyText
+  channel_id: 1
+
+two:
+  type: 1
+  created_by: 1
+  member_ids: 1
+  broadcast_msg: MyText
+  channel_id: 1

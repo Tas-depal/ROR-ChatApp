@@ -28,11 +28,12 @@ class ChannelsController < ApplicationController
 
   def remove_group_member
     channel = Channel.find_by_id(params[:channel_id])
-    member_id = channel.member_ids
-    member_id.delete(params[:member_id].to_i)
+    channel.member_ids.delete(params[:member_id].to_i)
+    channel.last_read.delete(params[:member_id].to_s)
+    channel.room_presence.delete(params[:member_id].to_s)
     channel.member_id = params[:member_id].to_i
     channel.remove_member = true
-    channel.update(member_ids: member_id)
+    channel.save
   end
 
   def show
@@ -111,8 +112,8 @@ class ChannelsController < ApplicationController
     update_room_presence
 
     last_read = @single_room.last_read
-    last_read[@current_user.id.to_s] = Time.now
-    @single_room.update!(last_read:)
+    @single_room.last_read[@current_user.id.to_s] = Time.now
+    @single_room.save
   end
 
   def update_room_presence
@@ -121,11 +122,12 @@ class ChannelsController < ApplicationController
     current_user_channels.each do |channel|
       room_presence = channel.room_presence
       if channel == @single_room
-        room_presence[@current_user.id.to_s] = true
+        channel.room_presence[@current_user.id.to_s] = true
       else
-        room_presence[@current_user.id.to_s] = false
+        channel.last_read[@current_user.id.to_s] = Time.now if channel.room_presence[@current_user.id.to_s] == true
+        channel.room_presence[@current_user.id.to_s] = false
       end
-      channel.update(room_presence:)
+      channel.save
     end
   end
 end

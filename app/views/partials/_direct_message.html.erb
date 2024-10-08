@@ -11,17 +11,12 @@
       <% end %>
       <%= link_to channel_name, channel_path(id: direct_message.id, last_read_at: Time.now), id: "direct_message_#{direct_message.id}_#{@current_user&.id}", data: { channel_id: direct_message.id, user_id: @current_user&.id } %>
     </div>
-    <%= turbo_stream_from "msg_count_#{direct_message.id}_#{current_user&.id}" %>
+    <% msg_count = direct_message.messages.where('created_at > ? AND user_id != ?', direct_message.last_read[user.id.to_s]&.to_time, user.id).count %>
 
-    <% unless direct_message.room_presence[@current_user&.id.to_s] %>
-      <% msg_count = direct_message.messages.where("created_at > ? AND user_id != ?", (direct_message.last_read["#{@current_user&.id}"])&.to_time, @current_user&.id).count %>
-    <% else %>
-      <% msg_count = 0 %>
-    <% end %>
-
-      <div class="col-1" id="show_message_count">
-        <%= render 'partials/message_count', msg_count:  %>
-      </div>
+    <%= turbo_stream_from "broadcast_#{direct_message.id}_#{user.id}" %>
+    <div class="col-1">
+      <%= render partial: 'partials/message_count', locals: { channel: direct_message, msg_count: , current_user: user } %>
+    </div>
   </div>
 <% end %>
 

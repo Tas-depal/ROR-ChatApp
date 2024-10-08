@@ -4,6 +4,7 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :messages, dependent: :destroy
+  has_many :broadcasts, dependent: :destroy
   validates :username, :email, :password_digest, presence: true
   validates :username, :email, uniqueness: true
   validates :password_digest, length: { minimum: 8, message: 'Must be at least 8 characters long.' }

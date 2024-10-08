@@ -1,5 +1,4 @@
 // Js for add member modal
-
 $(document).ready(function() {
   // Function to filter checkboxes based on search input
   function filterCheckboxes(searchTerm) {

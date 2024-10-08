@@ -71,8 +71,8 @@
                   </div>
                 </div> 
                   <div class="list-group chats" role="tablist" id="channels">
-                    <%= render @channels %>
-                  </div>  
+                    <%= render @channels, locals: { current_user: @current_user }%> 
+                  </div> 
               </div>
 
               <!-- End of private channels -->
@@ -89,8 +89,8 @@
                 </div>
                 <%= turbo_stream_from "direct_messages#{@current_user.id}" %>
                 <div class="list-group chats" role="tablist" id="direct_messages_list">
-                  <%= render partial: 'partials/direct_message', collection: @direct_messages %>
-                </div>  
+                  <%= render partial: 'partials/direct_message', collection: @direct_messages, locals: { current_user: @current_user, user: @current_user } %>
+                </div>                  
               </div>
               <!-- End of direct messages -->
 						</div>

@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
     session[:user_id] = user.id
     @current_user = user
     channel = Channel.find_by(channel_name: user.username)
-    channel = Channel.create(channel_name: user.username, is_private: true, member_ids: [user.id], creator_id: [user.id], last_read: {user.id.to_s=> Time.now}, room_presence: {user.id.to_s=> Time.now}) unless channel.present?
+    channel = Channel.create(channel_name: user.username, is_private: true, member_ids: [user.id], creator_id: [user.id], last_read: {user.id.to_s=> Time.now}, room_presence: {user.id.to_s=> true}) unless channel.present?
     redirect_to channel_path(channel.id)
   end
 

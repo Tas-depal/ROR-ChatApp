@@ -5,6 +5,8 @@ class Channel < ApplicationRecord
   attr_accessor :member_id, :add_member, :remove_member
 
   has_many :messages, dependent: :destroy
+  has_many :broadcasts, dependent: :destroy
+
   validates :channel_name, presence: true, uniqueness: true
   scope :public_channels, -> { where(is_private: false) }
   after_update_commit :broadcast_channel
