@@ -3,6 +3,7 @@
 # User model
 class User < ApplicationRecord
   has_secure_password
+  has_one_attached :profile_image, dependent: :destroy
   has_many :messages, dependent: :destroy
   has_many :broadcasts, dependent: :destroy
   validates :username, :email, :password_digest, presence: true

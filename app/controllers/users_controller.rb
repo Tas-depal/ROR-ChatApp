@@ -23,11 +23,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find_by_id(params[:id].to_i)
-    if @user.update(user_params)
-      redirect_to channels_path
-    else
-      render :edit, status: :unprocessable_entity
+    if edit_params[:profile_image].present?
+      current_user.profile_image.attach(edit_params[:profile_image])
+      if current_user.update(edit_params)
+        redirect_to channels_path
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
   end
 
@@ -51,5 +53,9 @@ private
 
   def user_params
     params.require(:user).permit(:username, :email, :password_digest)
+  end
+
+  def edit_params
+    params.require(:user).permit(:username, :password_digest, :profile_image)
   end
 end

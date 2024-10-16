@@ -13,12 +13,21 @@
   				<div class="content" id="content">
   					<div class="container">
   						<div class="col-md-12" id="messages">
-  							<div class="date">
-  								<hr>
-  								<span>Today</span>
-  								<hr>
-  							</div>
-  							<%= render @messages%>
+						  <% @messages.each do |date, messages| %>
+							<div class="date row">
+								<div class="col-4">
+									<hr>
+								</div>
+								<div class="col-4">
+									<span><%= date == Date.today ? "Today" : date == Date.yesterday ? "Yesterday" : date.strftime("%B %d, %Y") %></span>
+								</div>
+								<div class="col-4">
+									<hr>
+								</div>
+
+							</div>
+							<%= render partial: 'messages/message', collection: messages %>
+						  <% end %>
   						</div>
   					</div>
   				</div>
@@ -29,7 +38,6 @@
                   <div class="row w-100">
                     <div class="col-10">
                       <%= f.text_area :content, id: 'chat-text', class: "form-control", autocomplete: 'off', placeholder: "Start typing for reply..." %>
-      								<button class="btn emoticons"><i class="material-icons">insert_emoticon</i></button>
                     </div>                    
                     <div class="col-1 p-0">
                       <%= f.button "", data: { disable_with: false }, class: "btn send" do %>
@@ -37,7 +45,7 @@
                       <% end %>
                     </div>
                     <div class="col-1 p-0">
-        							<%= f.label :attachments do %>
+        				<%= f.label :attachments do %>
                         <%= f.file_field :attachments, multiple: true %>
                         <span class="btn attach d-sm-block"><i class="material-icons">attach_file</i></span>
                       <% end %>

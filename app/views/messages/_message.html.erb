@@ -5,12 +5,6 @@
       <div class="text-group cont-<%= message.user.id %>">
         <div class="text cont-<%= message.user.id %>">
           <%if message.attachments.attached?%>
-            <style>
-              .text-group .cont-<%= message.user.id %>
-              {
-                background: white !important;
-              }
-            </style>
             <div class="row mb-3">
               <%message.attachments.each do |file|%>
                 <div class="col-6 mb-3">
@@ -32,7 +26,5 @@
           <p><%= message.content %></p>
         </div>
       </div>
-      <span>
-      <span><%= message.user.username %> &nbsp &nbsp <%= message.created_at.strftime(" %b %d %Y %I:%M%p")%></span>
-    </div>
+      <span><%= message.user.username %> &nbsp &nbsp <%= message.created_at.localtime.strftime("%I:%M%p")%></span>    </div>
 </div>

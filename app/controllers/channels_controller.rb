@@ -41,7 +41,7 @@ class ChannelsController < ApplicationController
     if @single_room.present? && @single_room.member_ids.include?(@current_user.id)
       update_last_read
       @message = Message.new
-      @messages = @single_room&.messages
+      @messages = @single_room.messages.order(:created_at).group_by { |m| m.created_at.to_date }      
       render 'index'
     else
       redirect_to not_found_path
