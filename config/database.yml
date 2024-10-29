@@ -18,5 +18,5 @@ production:
   pool: 5
   host: localhost
   database: chatdb
-  username: Tasneem
+  username: postgres
   password: chatDb
