@@ -14,6 +14,9 @@ test:
 
 production:
   adapter: postgresql
-  database: my_database_production
+  encoding: unicode
   pool: 5
-  timeout: 5000
+  host: localhost
+  database: chatDb
+  username: Tasneem
+  password: chatDb
