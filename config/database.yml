@@ -17,6 +17,6 @@ production:
   encoding: unicode
   pool: 5
   host: localhost
-  database: chatDb
+  database: chatdb
   username: Tasneem
   password: chatDb
