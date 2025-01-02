@@ -16,6 +16,10 @@ ALTER USER postgres WITH PASSWORD 'PASSWORD';
 CREATE ROLE rails LOGIN PASSWORD 'rails';
 ALTER ROLE rails CREATEDB;
 
+Install Redis server
+sudo apt install redis-server
+redis-server
+
 git clone https://github.com/Tas-depal/Clone-Mattermost.git
 cd Clone-Mattermost
 bundle i
