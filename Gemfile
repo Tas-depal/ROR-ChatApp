@@ -60,8 +60,11 @@ gem 'rubyzip'
 gem 'capistrano'
 gem 'capistrano-rails'
 gem 'capistrano-bundler'
-gem 'capistrano-rbenv'
+gem 'capistrano-rvm'
 gem 'capistrano3-puma'
+gem 'capistrano-passenger'
+gem 'capistrano-figaro-yml'
+gem 'figaro'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
