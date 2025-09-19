@@ -1,3 +1,12 @@
+I recently built a real-time chat application using Ruby on Rails with ActionCable to handle WebSocket communication.
+
+✅ Direct messaging
+✅ Group chats
+✅ Add/remove members dynamically
+✅ Real-time message updates
+
+It was a great hands-on project to strengthen my skills in Rails, ActionCable, and real-time web applications. Excited to keep exploring and enhancing this further 🚀
+
 ## Steps to get the app running
 
 - Install ruby 3.2.2
